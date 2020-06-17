@@ -9,7 +9,7 @@
 
 - name: install lib xml of python for xml module
   package:
-    name: python-lxml
+    name: python3-lxml
 
 - name: check {{ xkb_layout_name }} layout in list
   xml:
