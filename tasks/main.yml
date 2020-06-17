@@ -1,8 +1,8 @@
 ---
-- name: set {{ layout_name }} keymap file
+- name: set {{ xkb_layout_name }} keymap file
   copy:
-    src: "{{ layout_name }}"
-    dest: "{{ xkb_path }}/symbols/{{ layout_name }}"
+    src: "{{ xkb_layout_name }}"
+    dest: "{{ xkb_path }}/symbols/{{ xkb_layout_name }}"
     owner: root
     group: root
     mode: 0644
@@ -11,14 +11,14 @@
   package:
     name: python-lxml
 
-- name: check {{ layout_name }} layout in list
+- name: check {{ xkb_layout_name }} layout in list
   xml:
     path: "{{ xkb_path }}/rules/evdev.xml"
-    xpath: "//layoutList/layout/configItem/name[text()='{{ layout_name }}']"
+    xpath: "//layoutList/layout/configItem/name[text()='{{ xkb_layout_name }}']"
     count: yes
   register: layout
 
-- name: add {{ layout_name }} keymap in list
+- name: add {{ xkb_layout_name }} keymap in list
   when: layout.count == 0
   xml:
     path: "{{ xkb_path }}/rules/evdev.xml"
