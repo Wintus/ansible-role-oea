@@ -1,2 +1,30 @@
 ---
-# tasks file for oea
+- name: set {{ xkb_layout_name }} keymap file
+  copy:
+    src: "{{ xkb_layout_name }}"
+    dest: "{{ xkb_path }}/symbols/{{ xkb_layout_name }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: install lib xml of python for xml module
+  package:
+    name: python-lxml
+
+- name: check {{ xkb_layout_name }} layout in list
+  xml:
+    path: "{{ xkb_path }}/rules/evdev.xml"
+    xpath: "//layoutList/layout/configItem/name[text()='{{ xkb_layout_name }}']"
+    count: yes
+  register: layout
+
+- name: add {{ xkb_layout_name }} keymap in list
+  when: layout.count == 0
+  xml:
+    path: "{{ xkb_path }}/rules/evdev.xml"
+    xpath: //layoutList
+    input_type: xml
+    add_children:
+      - "{{ lookup('file', 'oea.xml') }}"
+    pretty_print: yes
+    backup: yes
