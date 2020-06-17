@@ -19,6 +19,7 @@
   register: layout
 
 - name: add {{ layout_name }} keymap in list
+  when: layout.count == 0
   xml:
     path: "{{ xkb_path }}/rules/evdev.xml"
     xpath: //layoutList
@@ -27,4 +28,3 @@
       - "{{ lookup('file', 'oea.xml') }}"
     pretty_print: yes
     backup: yes
-  when: layout.count == 0
